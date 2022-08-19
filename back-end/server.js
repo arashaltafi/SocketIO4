@@ -11,6 +11,10 @@ app.use(express.static('public'));
 console.log('Server is running on Port 3000');
 const io = socket(server);
 
+//Peticion por default
+app.get('/', (request, response) => {
+    response.send('notification server is running on port 3000');
+});
 
 //Socket.io Connection------------------
 io.on('connection', (socket) => {
@@ -22,4 +26,10 @@ io.on('connection', (socket) => {
         io.emit('title', "test title");
         io.emit('description', "test description");
     })
+	
+	socket.on('disconnect', () => {
+        console.log('User has left ');
+
+        socket.broadcast.emit('userdisconnect', ' user has left');
+    });
 })
